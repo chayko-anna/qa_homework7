@@ -23,7 +23,6 @@ class Product:
         else:
             return False
 
-
     def buy(self, quantity):
         """
         TODO реализуйте метод покупки

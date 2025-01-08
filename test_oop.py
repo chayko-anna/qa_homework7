@@ -16,6 +16,7 @@ def product():
 def cart():
     return Cart()
 
+
 @pytest.fixture
 def product_sq():
     return Product("notebook", 50, "This is a notebook", 10)
@@ -32,7 +33,6 @@ class TestProducts:
         assert product.check_quantity(product.quantity - 1)
         assert product.check_quantity(product.quantity)
         assert not product.check_quantity(product.quantity + 1)
-
 
     def test_product_buy(self, product):
         # TODO напишите проверки на метод buy
@@ -54,6 +54,7 @@ class TestCart:
         На некоторые методы у вас может быть несколько тестов.
         Например, негативные тесты, ожидающие ошибку (используйте pytest.raises, чтобы проверить это)
     """
+
     def test_product_add(self, cart, product):
         # TODO напишите проверки на метод buy
         cart.add_product(product, 4)
@@ -70,8 +71,8 @@ class TestCart:
         assert cart.products[product] == 1
 
     def test_add_twice(self, cart, product):
-        cart.add_product(product,1)
-        cart.add_product(product,1)
+        cart.add_product(product, 1)
+        cart.add_product(product, 1)
         assert cart.products[product] == 2
 
     def test_clear_empty_cart(self, cart):
