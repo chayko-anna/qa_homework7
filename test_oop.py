@@ -16,7 +16,6 @@ def product():
 def cart():
     return Cart()
 
-
 @pytest.fixture
 def product_sq():
     return Product("notebook", 50, "This is a notebook", 10)
@@ -33,6 +32,7 @@ class TestProducts:
         assert product.check_quantity(product.quantity - 1)
         assert product.check_quantity(product.quantity)
         assert not product.check_quantity(product.quantity + 1)
+
 
     def test_product_buy(self, product):
         # TODO напишите проверки на метод buy
@@ -54,7 +54,6 @@ class TestCart:
         На некоторые методы у вас может быть несколько тестов.
         Например, негативные тесты, ожидающие ошибку (используйте pytest.raises, чтобы проверить это)
     """
-
     def test_product_add(self, cart, product):
         # TODO напишите проверки на метод buy
         cart.add_product(product, 4)
@@ -71,13 +70,13 @@ class TestCart:
         assert cart.products[product] == 1
 
     def test_add_twice(self, cart, product):
-        cart.add_product(product, 1)
-        cart.add_product(product, 1)
+        cart.add_product(product,1)
+        cart.add_product(product,1)
         assert cart.products[product] == 2
 
     def test_clear_empty_cart(self, cart):
         cart.clear()
-        assert cart.products
+        assert not cart.products
 
     def test_clear_cart(self, cart, product):
         cart.add_product(product, 3)
@@ -89,11 +88,22 @@ class TestCart:
         cart.remove_product(product)
         assert not cart.products
 
+    def test_remove_bigger_qty(self, cart, product):
+        cart.add_product(product, 5)
+        cart.remove_product(product, 6)
+        assert not cart.products
+
+    def test_remove_same_qty(self, cart, product):
+        cart.add_product(product, 5)
+        cart.remove_product(product, 5)
+        assert not cart.products
+
     def test_remove_one_product_from_cart_of_two(self, cart, product, product_sq):
         cart.add_product(product, 5)
         cart.add_product(product_sq, 1)
         cart.remove_product(product)
         assert product not in cart.products
+        assert product_sq in cart.products
 
     def test_remove_two_products(self, cart, product, product_sq):
         cart.add_product(product, 5)
@@ -117,6 +127,12 @@ class TestCart:
         assert product.quantity == old_quantity - 10
 
     def test_not_buying(self, cart, product_sq):
+        with pytest.raises(ValueError):
+            cart.add_product(product_sq, 12)
+            cart.buy()
+
+    def test_buy_2pr_cart(self, cart, product, product_sq):
+        cart.add_product(product, 10)
         with pytest.raises(ValueError):
             cart.add_product(product_sq, 12)
             cart.buy()
